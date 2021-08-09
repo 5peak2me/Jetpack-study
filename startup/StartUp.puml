@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+InitializationProvider -> AppInitializer: onCreate
+AppInitializer -> AppInitializer: getInstance
+AppInitializer -> AppInitializer: discoverAndInitialize
+
+group 递归
+AppInitializer -> AppInitializer: doInitialize
+AppInitializer -> Initializer: dependencies
+end
+note left: 如果 dependencies 不为空，递归执行 doInitialize
+
+AppInitializer -> Initializer: create
+
+@enduml
