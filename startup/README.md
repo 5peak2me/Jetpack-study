@@ -27,3 +27,16 @@
 </provider>
 ```
 
+```mermaid
+sequenceDiagram
+  InitializationProvider ->> AppInitializer: onCreate
+  AppInitializer ->> AppInitializer: getInstance
+  AppInitializer ->> AppInitializer: discoverAndInitialize
+
+	AppInitializer ->> AppInitializer: doInitialize
+  AppInitializer ->> Initializer: dependencies
+  Note right of AppInitializer: 如果 dependencies 不为空，递归执行 doInitialize
+
+  AppInitializer ->> Initializer: create
+```
+
