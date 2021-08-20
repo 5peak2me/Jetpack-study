@@ -3,8 +3,8 @@
 
 autonumber
 
-InitializationProvider -> AppInitializer: onCreate
-AppInitializer -> AppInitializer: getInstance
+-> InitializationProvider: onCreate
+InitializationProvider -> AppInitializer: getInstance
 AppInitializer -> AppInitializer: discoverAndInitialize
 
 group 递归
