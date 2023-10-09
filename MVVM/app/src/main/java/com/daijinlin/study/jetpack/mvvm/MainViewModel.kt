@@ -1,15 +1,16 @@
 package com.daijinlin.study.jetpack.mvvm
 
+import android.os.Handler
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.lang.Thread.sleep
+import androidx.lifecycle.viewModelScope
 
 class MainViewModel : ViewModel() {
 
     private val _liveData = MutableLiveData<String>()
-    val liveData: LiveData<String> = _liveData;
+    val liveData: LiveData<String> = _liveData
 
     init {
         Log.d(
@@ -19,8 +20,13 @@ class MainViewModel : ViewModel() {
     }
 
     fun update() {
-        sleep(3000L)
-        _liveData.value = "我是更新后的值"
+        Handler().postDelayed({
+            _liveData.value = "我是更新后的值"
+        }, 2000)
+    }
+
+    fun post() {
+        _liveData.value = "我是发送的值"
     }
 
     override fun onCleared() {

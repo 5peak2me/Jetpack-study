@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+-> MutableLiveData: observe
+note right: 如果当前页面被销毁，直接返回，\n否则包装LifecycleBoundObserver，\n存放到mObservers中
+MutableLiveData -> LifecycleRegistry: addObserver
+
+-> MutableLiveData: setValue
+MutableLiveData -> LiveData: setValue
+LiveData -> LiveData: dispatchingValue
+alt dispatchingValue方法传递空，遍历mObservers中的观察者
+LiveData -> LiveData: considerNotify
+end
+
+LiveData -> ObserverWrapper: activeStateChanged
+ObserverWrapper -> LiveData: dispatchingValue
+
+LiveData -> Observer: onChanged
+
+'LifecycleRegistry -> Bob: Authentication Request
+'Bob --> Alice: Authentication Response
+
+'Alice -> Bob: Another authentication Request
+'Alice <-- Bob: another authentication Response
+@enduml

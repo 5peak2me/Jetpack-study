@@ -27,4 +27,4 @@
 </provider>
 ```
 
-![StartUp](StartUp.png)
+![StartUp](Startup.png)

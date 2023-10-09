@@ -1,0 +1,52 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+group 初始化
+-> WorkManagerInitializer: onCreate
+WorkManagerInitializer -> WorkManager: initialize
+WorkManager -> WorkManagerImpl: initialize
+WorkManagerImpl -> WorkManagerImpl: new
+end
+
+group 无约束任务
+WorkManager -> WorkManager: getInstance
+WorkManager -> WorkManagerImpl: getInstance
+WorkManager -> WorkManagerImpl: enqueue
+WorkManagerImpl -> WorkContinuationImpl: enqueue
+WorkContinuationImpl -> WorkManagerImpl: getWorkTaskExecutor
+WorkManagerImpl -> WorkManagerTaskExecutor: executeOnBackgroundThread
+WorkManagerTaskExecutor -> EnqueueRunnable: run
+note right: 插入到 WorkDatabase
+EnqueueRunnable -> EnqueueRunnable: scheduleWorkInBackground
+EnqueueRunnable -> Schedulers: Schedulers
+Schedulers -> GreedyScheduler: schedule
+GreedyScheduler -> WorkManagerImpl: startWork
+WorkManagerImpl -> WorkManagerImpl: startWork
+WorkManagerImpl -> WorkManagerTaskExecutor: executeOnBackgroundThread
+WorkManagerTaskExecutor -> StartWorkRunnable: run
+StartWorkRunnable -> WorkManagerImpl: getProcessor
+Processor -> Processor: startWork
+Processor -> WorkerWrapper: run
+WorkerWrapper -> WorkerWrapper: runWorker
+WorkerWrapper -> ListenableWorker: startWork
+ListenableWorker -> Worker: startWork
+Worker -> UploadWorker: doWork
+end
+
+group 有约束任务
+-> ConstraintProxy: onReceive
+ConstraintProxy -> SystemAlarmService: onStartCommand
+SystemAlarmService -> SystemAlarmDispatcher: add
+SystemAlarmDispatcher -> SystemAlarmDispatcher: processCommand
+SystemAlarmDispatcher -> CommandHandler: onHandleIntent
+CommandHandler -> CommandHandler: handleConstraintsChanged
+CommandHandler -> ConstraintsCommandHandler: handleConstraintsChanged
+ConstraintsCommandHandler -> CommandHandler: createDelayMetIntent
+end
+
+'Bob --> Alice: Authentication Response
+'Alice -> Bob: Another authentication Request
+'Alice <-- Bob: another authentication Response
+@enduml

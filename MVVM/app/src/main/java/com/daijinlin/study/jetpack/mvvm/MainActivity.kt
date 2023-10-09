@@ -1,8 +1,10 @@
 package com.daijinlin.study.jetpack.mvvm
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 
@@ -19,7 +21,8 @@ import androidx.lifecycle.ViewModelProvider
  */
 class MainActivity : AppCompatActivity() {
 
-    //    private val viewModel: MainViewModel = MainViewModel()
+//    private val viewModel: MainViewModel = MainViewModel()
+//    private val viewModel: MainViewModel by viewModels()
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +39,14 @@ class MainActivity : AppCompatActivity() {
             title = it
         }
 
-        findViewById<Button>(R.id.btn).setOnClickListener {
+        findViewById<Button>(R.id.btn1).setOnClickListener {
             viewModel.update()
         }
+
+        findViewById<Button>(R.id.btn2).setOnClickListener {
+            startActivity(Intent(this, SecondActivity::class.java))
+        }
+
 
     }
 }
